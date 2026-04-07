@@ -1,4 +1,4 @@
-const API = 'http://localhost:3000/api/tasks';
+const API = import.meta.env.VITE_API_URL;
 
 // Este archivo centraliza todas las llamadas al backend
 // Básicamente es una capa para no hacer fetch directo en los componentes
