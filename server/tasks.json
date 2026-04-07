@@ -1,0 +1,42 @@
+[
+  [
+    "8380f5cc-ead0-4318-85d7-bccd44d1066d",
+    {
+      "id": "8380f5cc-ead0-4318-85d7-bccd44d1066d",
+      "title": "Hola",
+      "status": "completed",
+      "createdAt": "2026-04-07T13:47:32.238Z",
+      "updatedAt": "2026-04-07T14:20:41.776Z"
+    }
+  ],
+  [
+    "d30af650-fa55-4495-a528-7924d9602dad",
+    {
+      "id": "d30af650-fa55-4495-a528-7924d9602dad",
+      "title": "Tarea 1",
+      "status": "pending",
+      "createdAt": "2026-04-07T13:47:45.565Z",
+      "updatedAt": "2026-04-07T13:48:23.715Z"
+    }
+  ],
+  [
+    "aa311fdb-aed2-4e44-a31a-27607468b514",
+    {
+      "id": "aa311fdb-aed2-4e44-a31a-27607468b514",
+      "title": "Tarea 2",
+      "status": "pending",
+      "createdAt": "2026-04-07T13:47:55.125Z",
+      "updatedAt": "2026-04-07T13:48:22.909Z"
+    }
+  ],
+  [
+    "148ce7bb-6081-45f7-bc03-afe605e84865",
+    {
+      "id": "148ce7bb-6081-45f7-bc03-afe605e84865",
+      "title": "Tarea 3",
+      "status": "pending",
+      "createdAt": "2026-04-07T13:47:58.137Z",
+      "updatedAt": "2026-04-07T13:48:21.504Z"
+    }
+  ]
+]

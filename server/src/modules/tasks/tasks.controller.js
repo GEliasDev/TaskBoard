@@ -21,7 +21,7 @@ export const TaskController = {
 
     create: async (req, res, next) => {
         try {
-            const task = TaskService.createTask(req.body);
+            const task = await TaskService.createTask(req.body);
             res.status(201).json({ success: true, data: task });
         } catch (error) {
             next(error);
@@ -30,7 +30,7 @@ export const TaskController = {
 
     update: async (req, res, next) => {
         try {
-            const task = TaskService.updateTask(req.params.id, req.body);
+            const task = await TaskService.updateTask(req.params.id, req.body);
             res.json({ success: true, data: task });
         } catch (error) {
             next(error);
@@ -39,7 +39,7 @@ export const TaskController = {
 
     complete: async (req, res, next) => {
         try {
-            const task = TaskService.completeTask(req.params.id);
+            const task = await TaskService.completeTask(req.params.id);
             res.json({ success: true, data: task });
         } catch (error) {
             next(error);
@@ -48,7 +48,7 @@ export const TaskController = {
 
     remove: async (req, res, next) => {
         try {
-            TaskService.deleteTask(req.params.id);
+            await TaskService.deleteTask(req.params.id);
             res.status(204).send();
         } catch (error) {
             next(error);
