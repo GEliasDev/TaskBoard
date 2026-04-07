@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react';
-import Sidebar from './components/Sidebar';
-import TaskForm from './components/TaskForm';
-import TaskList from './components/TaskList';
-import { EditModal, ConfirmModal } from './components/Modal';
-import Toast from './components/Toast';
-import { taskApi } from './services/taskApi';
+import Sidebar from './components/layout/Sidebar';
+import TaskForm from './components/tasks/TaskForm';
+import TaskList from './components/tasks/TaskList';
+import { EditModal, ConfirmModal } from './components/common/Modal';
+import Toast from './components/common/Toast';
+import { useTasks } from './hooks/useTasks';
+import { useModals } from './hooks/useModals';
+import { useFilter } from './hooks/useFilter';
 import './App.css';
 
 const TOPBAR_TITLES = {
@@ -14,75 +15,36 @@ const TOPBAR_TITLES = {
 };
 
 export default function App() {
-    const [tasks, setTasks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [filter, setFilter] = useState('all');
+    // Cargo toda la lógica de tareas (crear, editar, eliminar, etc.)
+    const { tasks, loading, error, createTask, toggleTask, updateTitle, deleteTask } = useTasks();
 
-    const [editTask, setEditTask] = useState(null);
-    const [deleteTask, setDeleteTask] = useState(null);
-    const [toast, setToast] = useState(null);
+    // Hook que maneja el filtro de las de visualización (Todas / Pendientes / Completadas) y los cálculos
+    const { filter, setFilter, counts, filteredTasks, pct } = useFilter(tasks);
 
-    const showToast = (msg) => setToast(msg);
+    // Hook que maneja los modales y notificaciones (editar, borrar y toast)
+    const { editTask, setEditTask, deleteTask: deleteTaskState, setDeleteTask, toast, showToast } = useModals();
 
-    const fetchTasks = async () => {
-        try {
-            const data = await taskApi.getAll();
-            setTasks(data);
-        } catch {
-            setError('No se pudo conectar con el servidor.');
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => { fetchTasks(); }, []);
-
-    const createTask = async (title) => {
-        const newTask = await taskApi.create(title);
-        setTasks((prev) => [...prev, newTask]);
-        showToast('Tarea agregada');
-    };
-
-    const toggleTask = async (id, currentStatus) => {
-        const updated = await taskApi.toggle(id, currentStatus);
-        setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
-    };
-
+    // Función que guarda el título editado
     const handleEditSave = async (id, newTitle) => {
-        const updated = await taskApi.updateTitle(id, newTitle);
-        setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
+        await updateTitle(id, newTitle);
         setEditTask(null);
         showToast('Tarea actualizada');
     };
 
+    // Función pregunta si quiere eliminar la tarea
     const handleDeleteConfirm = async () => {
-        await taskApi.delete(deleteTask.id);
-        setTasks((prev) => prev.filter((t) => t.id !== deleteTask.id));
+        await deleteTask(deleteTaskState.id);
         setDeleteTask(null);
         showToast('Tarea eliminada');
     };
 
-    const handleEditOpen = (id, title) => {
-        setEditTask({ id, title });
-    };
-
-    const handleDeleteOpen = (id, title) => {
-        setDeleteTask({ id, title });
-    };
-
-    const counts = {
-        all: tasks.length,
-        pending: tasks.filter(t => t.status === 'pending').length,
-        completed: tasks.filter(t => t.status === 'completed').length,
-    };
-
-    const filteredTasks = filter === 'all' ? tasks : tasks.filter(t => t.status === filter);
-    const pct = counts.all > 0 ? Math.round((counts.completed / counts.all) * 100) : 0;
-
     return (
         <div className="layout">
-            <Sidebar filter={filter} onFilter={setFilter} counts={counts} />
+            <Sidebar 
+                filter={filter} 
+                onFilter={setFilter} 
+                counts={counts} 
+            />
 
             <div className="content">
                 <header>
@@ -91,38 +53,59 @@ export default function App() {
                             <h1 className="topbar-title">{TOPBAR_TITLES[filter]}</h1>
                             <span className="topbar-count">{filteredTasks.length} tareas</span>
                         </div>
+
+                        {/* Tarjetas de Total, Pendientes, Listas y Progreso */}
                         <div className="metrics">
-                            <div className="metric"><span className="metric-value">{counts.all}</span><span className="metric-label">Total</span></div>
-                            <div className="metric metric--pending"><span className="metric-value">{counts.pending}</span><span className="metric-label">Pendientes</span></div>
-                            <div className="metric metric--done"><span className="metric-value">{counts.completed}</span><span className="metric-label">Listas</span></div>
-                            <div className="metric metric--progress"><span className="metric-value">{pct}%</span><span className="metric-label">Progreso</span></div>
+                            <div className="metric">
+                                <span className="metric-value">{counts.all}</span>
+                                <span className="metric-label">Total</span>
+                            </div>
+                            <div className="metric metric--pending">
+                                <span className="metric-value">{counts.pending}</span>
+                                <span className="metric-label">Pendientes</span>
+                            </div>
+                            <div className="metric metric--done">
+                                <span className="metric-value">{counts.completed}</span>
+                                <span className="metric-label">Listas</span>
+                            </div>
+                            <div className="metric metric--progress">
+                                <span className="metric-value">{pct}%</span>
+                                <span className="metric-label">Progreso</span>
+                            </div>
                         </div>
                     </div>
+
+                    {/* Barra de progreso general */}
                     <div className="progress-bar-wrap">
                         <div className="progress-bar-fill" style={{ width: `${pct}%` }} />
                     </div>
                 </header>
 
                 <main className="main">
+                    {/* Formulario para crear nueva tarea */}
                     <TaskForm onCreate={createTask} />
 
                     {loading && <p className="feedback">Cargando tareas...</p>}
                     {error && <p className="feedback feedback--error">{error}</p>}
 
+                    {/* Lista de tareas */}
                     {!loading && !error && (
                         <TaskList
                             tasks={filteredTasks}
                             filter={filter}
                             onToggle={toggleTask}
-                            onEdit={handleEditOpen}
-                            onDelete={handleDeleteOpen}
+                            onEdit={(id, title) => setEditTask({ id, title })}
+                            onDelete={(id, title) => setDeleteTask({ id, title })}
                         />
                     )}
                 </main>
             </div>
 
+            {/* Modales */}
             {editTask && <EditModal task={editTask} onSave={handleEditSave} onClose={() => setEditTask(null)} />}
-            {deleteTask && <ConfirmModal title={deleteTask.title} onConfirm={handleDeleteConfirm} onClose={() => setDeleteTask(null)} />}
+            {deleteTaskState && <ConfirmModal title={deleteTaskState.title} onConfirm={handleDeleteConfirm} onClose={() => setDeleteTask(null)} />}
+            
+            {/* Notificación flotante */}
             {toast && <Toast message={toast} onDone={() => setToast(null)} />}
         </div>
     );

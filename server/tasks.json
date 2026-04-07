@@ -6,7 +6,7 @@
       "title": "Tarea 1",
       "status": "pending",
       "createdAt": "2026-04-07T13:47:45.565Z",
-      "updatedAt": "2026-04-07T14:41:29.966Z"
+      "updatedAt": "2026-04-07T16:47:54.161Z"
     }
   ],
   [
@@ -16,7 +16,7 @@
       "title": "Tarea 2",
       "status": "pending",
       "createdAt": "2026-04-07T13:47:55.125Z",
-      "updatedAt": "2026-04-07T13:48:22.909Z"
+      "updatedAt": "2026-04-07T16:47:54.833Z"
     }
   ],
   [
@@ -26,16 +26,17 @@
       "title": "Tarea 3",
       "status": "pending",
       "createdAt": "2026-04-07T13:47:58.137Z",
-      "updatedAt": "2026-04-07T13:48:21.504Z"
+      "updatedAt": "2026-04-07T16:47:55.536Z"
     }
   ],
   [
-    "dc2f93bc-ac39-43ad-af2f-2ade29802a3c",
+    "aec30741-76f8-4e7b-bb1c-966eb285e2de",
     {
-      "id": "dc2f93bc-ac39-43ad-af2f-2ade29802a3c",
+      "id": "aec30741-76f8-4e7b-bb1c-966eb285e2de",
       "title": "Tarea 4",
       "status": "pending",
-      "createdAt": "2026-04-07T14:38:15.505Z"
+      "createdAt": "2026-04-07T16:47:34.852Z",
+      "updatedAt": "2026-04-07T16:47:55.686Z"
     }
   ]
 ]
