@@ -89,7 +89,7 @@ TaskBoard/
 Clona el repositorio:
 
 ```bash
-git clone https://github.com/tu-usuario/taskboard.git
+git clone https://github.com/GEliasDev/TaskBoard.git
 cd TaskBoard
 ```
 
