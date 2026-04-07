@@ -24,12 +24,6 @@ let tasks = await loadTasks();
 export const TaskService = {
     getAllTasks: () => Array.from(tasks.values()),
 
-    getTaskById: (id) => {
-        const task = tasks.get(id);
-        if (!task) throw new AppError(`Tarea con id "${id}" no encontrada.`, 404);
-        return task;
-    },
-
     createTask: async (data) => {
         const parsed = taskCreateSchema.parse(data);
         const task = { id: randomUUID(), ...parsed, createdAt: new Date().toISOString() };

@@ -10,15 +10,6 @@ export const TaskController = {
         }
     },
 
-    getOne: async (req, res, next) => {
-        try {
-            const task = TaskService.getTaskById(req.params.id);
-            res.json({ success: true, data: task });
-        } catch (error) {
-            next(error);
-        }
-    },
-
     create: async (req, res, next) => {
         try {
             const task = await TaskService.createTask(req.body);
