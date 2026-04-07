@@ -124,8 +124,6 @@ La aplicación queda disponible en `http://localhost:5173`.
 
 ```env
 PORT=3000
-CLIENT_ORIGIN=http://localhost:5173
-NODE_ENV=development
 ```
 
 ### Frontend (`client/.env`)
